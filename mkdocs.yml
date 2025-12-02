@@ -1,11 +1,11 @@
 site_name: phoenix4all
-repo_url: https://github.com/ahmed-f-alrefaie/phoenix4all
-site_url: https://ahmed-f-alrefaie.github.io/phoenix4all
+repo_url: https://github.com/taurex-space/phoenix4all
+site_url: https://taurex-space.github.io/phoenix4all
 site_description: All in one library for loading and using phoenix spectra
 site_author: Ahmed Al-Refaie
 edit_uri: edit/main/docs/
-repo_name: ahmed-f-alrefaie/phoenix4all
-copyright: Maintained by <a href="https://ahmed-f-alrefaie.com">ahmed-f-alrefaie</a>.
+repo_name: taurex-space/phoenix4all
+copyright: Maintained by <a href="https://taurex-space.com">taurex-space</a>.
 
 nav:
   - Home: index.md
@@ -41,7 +41,7 @@ theme:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/ahmed-f-alrefaie/phoenix4all
+      link: https://github.com/taurex-space/phoenix4all
     - icon: fontawesome/brands/python
       link: https://pypi.org/project/phoenix4all
 

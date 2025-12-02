@@ -33,9 +33,9 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://ahmed-f-alrefaie.github.io/phoenix4all/"
-Repository = "https://github.com/ahmed-f-alrefaie/phoenix4all"
-Documentation = "https://ahmed-f-alrefaie.github.io/phoenix4all/"
+Homepage = "https://taurex-space.github.io/phoenix4all/"
+Repository = "https://github.com/taurex-space/phoenix4all"
+Documentation = "https://taurex-space.github.io/phoenix4all/"
 
 [dependency-groups]
 dev = [

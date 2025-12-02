@@ -1,15 +1,15 @@
 # Phoenix4All - The Phoenix library for the lazy astronomer
 
-[![Release](https://img.shields.io/github/v/release/ahmed-f-alrefaie/phoenix4all)](https://img.shields.io/github/v/release/ahmed-f-alrefaie/phoenix4all)
-[![Build status](https://img.shields.io/github/actions/workflow/status/ahmed-f-alrefaie/phoenix4all/main.yml?branch=main)](https://github.com/ahmed-f-alrefaie/phoenix4all/actions/workflows/main.yml?query=branch%3Amain)
-[![codecov](https://codecov.io/gh/ahmed-f-alrefaie/phoenix4all/branch/main/graph/badge.svg)](https://codecov.io/gh/ahmed-f-alrefaie/phoenix4all)
-[![Commit activity](https://img.shields.io/github/commit-activity/m/ahmed-f-alrefaie/phoenix4all)](https://img.shields.io/github/commit-activity/m/ahmed-f-alrefaie/phoenix4all)
-[![License](https://img.shields.io/github/license/ahmed-f-alrefaie/phoenix4all)](https://img.shields.io/github/license/ahmed-f-alrefaie/phoenix4all)
+[![Release](https://img.shields.io/github/v/release/taurex-space/phoenix4all)](https://img.shields.io/github/v/release/taurex-space/phoenix4all)
+[![Build status](https://img.shields.io/github/actions/workflow/status/taurex-space/phoenix4all/main.yml?branch=main)](https://github.com/taurex-space/phoenix4all/actions/workflows/main.yml?query=branch%3Amain)
+[![codecov](https://codecov.io/gh/taurex-space/phoenix4all/branch/main/graph/badge.svg)](https://codecov.io/gh/taurex-space/phoenix4all)
+[![Commit activity](https://img.shields.io/github/commit-activity/m/taurex-space/phoenix4all)](https://img.shields.io/github/commit-activity/m/taurex-space/phoenix4all)
+[![License](https://img.shields.io/github/license/taurex-space/phoenix4all)](https://img.shields.io/github/license/taurex-space/phoenix4all)
 
 All in one library for loading and using phoenix spectra
 
-- **Github repository**: <https://github.com/ahmed-f-alrefaie/phoenix4all/>
-- **Documentation** <https://ahmed-f-alrefaie.github.io/phoenix4all/>
+- **Github repository**: <https://github.com/taurex-space/phoenix4all/>
+- **Documentation** <https://taurex-space.github.io/phoenix4all/>
 
 
 ## What is it?
@@ -103,7 +103,7 @@ print(wavelength, flux)
 
 Its faster since theres less overhead in figuring out which files are available.
 
-## Downloading 
+## Downloading
 
 Ohhhh fancy! You can also use the command-line interface to fetch a model. We can see what models are available from a source like this:
 
@@ -215,7 +215,6 @@ Please cite both the sources and models as well. We will be working on a proper 
 
 For the love of God, please do. Open an issue or a pull request on GitHub. Really just adding more sources would be amazing.
 
-## License 
+## License
 
 Phoenix4All is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
-
