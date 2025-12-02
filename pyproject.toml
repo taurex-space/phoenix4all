@@ -1,6 +1,6 @@
 [project]
 name = "phoenix4all"
-version = "0.0.1"
+version = "0.0.2"
 description = "All in one library for loading and using phoenix spectra"
 authors = [{ name = "Ahmed Al-Refaie", email = "ahmed.al-refaie@ucl.ac.uk" }]
 readme = "README.md"
@@ -52,6 +52,7 @@ dev = [
     "jupyterlab>=4.4.9",
     "matplotlib>=3.9.4",
     "ipympl>=0.9.8",
+    "pytest-mock>=3.15.1",
 ]
 
 [build-system]
