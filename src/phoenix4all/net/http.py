@@ -303,13 +303,23 @@ def download_to_directory(  # noqa: C901
     from tqdm.auto import tqdm
 
     for output_path in output_paths:
-        output_path.mkdir(parents=True, exist_ok=True) if not includes_filename else output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.mkdir(parents=True, exist_ok=True) if not includes_filename else output_path.parent.mkdir(
+            parents=True, exist_ok=True
+        )
 
-    files = tqdm(zip(files, output_paths), desc="Downloading files", total=len(files)) if progress else zip(files, output_paths)
+    files = (
+        tqdm(zip(files, output_paths), desc="Downloading files", total=len(files))
+        if progress
+        else zip(files, output_paths)
+    )
     downloaded_files = []
     skipped_files = []
     for file_url, output_path in files:
-        local_filename = output_path / os.path.basename(urllib.parse.urlparse(file_url).path) if not includes_filename else output_path
+        local_filename = (
+            output_path / os.path.basename(urllib.parse.urlparse(file_url).path)
+            if not includes_filename
+            else output_path
+        )
         try:
             with requests.get(file_url, stream=True, timeout=timeout, **requests_kwargs) as r:
                 r.raise_for_status()

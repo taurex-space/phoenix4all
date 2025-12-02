@@ -31,6 +31,7 @@ class NoAvailableDataError(ValueError):
     def __init__(self):
         super().__init__("No available data found for the specified parameters.")
 
+
 class ModelNotFoundError(ValueError):
     def __init__(self, model_name: str):
         super().__init__(f"Model '{model_name}' not found in the available models.")
@@ -279,7 +280,6 @@ class PhoenixSource(abc.ABC):
         """Return a list of available model names for this source."""
         return []
 
-
     def __init__(
         self,
         path: Optional[pathlib.Path] = None,
@@ -381,8 +381,6 @@ class PhoenixSource(abc.ABC):
             Path to the downloaded file.
         """
         raise NotImplementedError
-
-
 
     @abc.abstractmethod
     def list_available_files(self) -> list[PhoenixDataFile]:

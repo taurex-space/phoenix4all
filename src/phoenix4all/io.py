@@ -1,8 +1,8 @@
 import base64
 import json
+import pathlib
 import zlib
 from typing import Literal, TypeVar
-import pathlib
 
 T = TypeVar("T")
 
@@ -26,5 +26,4 @@ def json_unzip(j: ZIPJSON_TYPE) -> list[dict]:
 def get_package_download_cache_dir() -> pathlib.Path:
     import astropy.config.paths
 
-    return astropy.config.paths.get_cache_dir_path("phoenix4all") 
-
+    return astropy.config.paths.get_cache_dir_path("phoenix4all")
