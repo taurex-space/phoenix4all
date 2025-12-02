@@ -62,7 +62,7 @@ with tarfile.open(fileobj=myfile, mode="r|") as tar:
 print(f.decode('utf-8', errors='ignore'))
 ```
 
-Why? We can then exploit the "Range" HTTP header to only download the bytes we need from a remote server! 
+Why? We can then exploit the "Range" HTTP header to only download the bytes we need from a remote server!
 Something like:
 
 ```python
