@@ -398,12 +398,14 @@ class PhoenixSource(abc.ABC):
         Parameters can be either a single value, a tuple specifying a range, or "all" to download all available files for a model.
 
         Args:
-            output_path: Path to save the downloaded file.
+            output_dir: Path to save the downloaded file.
             teff: Effective temperature range/value of the desired model.
             logg: Surface gravity range/value of the desired model.
             feh: Metallicity range/value of the desired model.
             alpha: Alpha element enhancement range/value of the desired model (default is 0.0).
             base_url: Optional base URL to download the model from. Defaults to the standard Phoenix STSCI model url.
+            model_name: Optional model name to use in the URL if needed. (Some sources may require this)
+            mkdir: Whether to create the output directory if it does not exist.
         Returns:
             Path to the downloaded file.
         """

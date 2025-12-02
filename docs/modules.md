@@ -1,1 +1,2 @@
-::: phoenix4all.foo
+::: phoenix4all
+::: phoenix4all.sources

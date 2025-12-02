@@ -9,6 +9,7 @@ copyright: Maintained by <a href="https://taurex-space.com">taurex-space</a>.
 
 nav:
   - Home: index.md
+  - TauREx Plugin: taurex.md
   - Modules: modules.md
 plugins:
   - search
