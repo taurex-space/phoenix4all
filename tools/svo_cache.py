@@ -1,12 +1,12 @@
-from phoenix4all.sources.svo import SVOSource
 from dataclasses import asdict
+
 from phoenix4all.io import json_zip
+from phoenix4all.sources.svo import SVOSource
 
 models = SVOSource.list_available_models()
 
 
 data_set = {}
-
 
 
 for model in models:
@@ -20,5 +20,6 @@ for model in models:
     data_set[model.id] = [asdict(f) for f in files]
 
 import json
+
 with open("svo_dataset.json", "w") as f:
     json.dump(json_zip(data_set), f)
