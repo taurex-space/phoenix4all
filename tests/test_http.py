@@ -1,19 +1,20 @@
 import pathlib
+from unittest.mock import MagicMock, patch
+
 import pytest
-from unittest.mock import patch, MagicMock
 from bs4 import BeautifulSoup
 
 from phoenix4all.net.http import (
-    human2bytes,
+    ColumnDetectionError,
+    FetchListingError,
     aherf2filename,
-    parse,
-    fetch_listing,
     check_file_and_length,
     download_to_directory,
-    FileEntry,
-    FetchListingError,
-    ColumnDetectionError,
+    fetch_listing,
+    human2bytes,
+    parse,
 )
+
 
 # Test human2bytes
 @pytest.mark.parametrize(
@@ -31,6 +32,7 @@ from phoenix4all.net.http import (
 def test_human2bytes(input_str, expected):
     assert human2bytes(input_str) == expected
 
+
 # Test aherf2filename
 @pytest.mark.parametrize(
     "a_href, expected",
@@ -42,6 +44,7 @@ def test_human2bytes(input_str, expected):
 )
 def test_aherf2filename(a_href, expected):
     assert aherf2filename(a_href) == expected
+
 
 # Test parse
 def test_parse():
@@ -63,6 +66,7 @@ def test_parse():
     assert listing[0].size == 1024
     assert listing[1].name == "file2.txt"
     assert listing[1].size == 2048
+
 
 # Test fetch_listing
 @patch("requests.get")
@@ -86,6 +90,7 @@ def test_fetch_listing(mock_get):
     assert listing[0].name == "file1.txt"
     assert listing[0].size == 1024
 
+
 # Test check_file_and_length
 def test_check_file_and_length(tmp_path):
     file_path = tmp_path / "test_file.txt"
@@ -93,6 +98,7 @@ def test_check_file_and_length(tmp_path):
     assert check_file_and_length(file_path, 1024) is True
     assert check_file_and_length(file_path, 2048) is False
     assert check_file_and_length(pathlib.Path("nonexistent_file.txt"), 1024) is False
+
 
 # Test download_to_directory
 @patch("requests.get")
@@ -111,10 +117,12 @@ def test_download_to_directory(mock_get, tmp_path):
     assert downloaded_files[0].exists()
     assert downloaded_files[0].read_text() == "data"
 
+
 # Test exceptions
 def test_column_detection_error():
     with pytest.raises(ColumnDetectionError):
         raise ColumnDetectionError()
+
 
 def test_fetch_listing_error():
     with pytest.raises(FetchListingError):

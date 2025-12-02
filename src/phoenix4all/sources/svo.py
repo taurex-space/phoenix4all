@@ -172,6 +172,7 @@ def list_datasets_from_url(model_id: str, base_url: str = BASE_URL) -> list[Phoe
     """
     data = requests.post(
         urlparse.urljoin(base_url, "index.php"),
+        timeout=100,
         data={
             "models": model_id,
             "oby": "",

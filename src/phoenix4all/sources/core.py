@@ -170,19 +170,17 @@ def compute_weights(
     t_teff, t_logg, t_feh, t_alpha = t
 
     weights = {}
-    for idx, row in nearest_df.iterrows():
-        i = teff_vals.index(row["teff"])
-        j = logg_vals.index(row["logg"])
-        k = feh_vals.index(row["feh"])
-        l = alpha_vals.index(row["alpha"])
-
-
+    for _, row in nearest_df.iterrows():
+        idx_i = teff_vals.index(row["teff"])
+        idx_j = logg_vals.index(row["logg"])
+        idx_k = feh_vals.index(row["feh"])
+        idx_l = alpha_vals.index(row["alpha"])
 
         weight = (
-            ((1 - t_teff) if i == 0 else t_teff if len(teff_vals) > 1 else 1)
-            * ((1 - t_logg) if j == 0 else t_logg if len(logg_vals) > 1 else 1)
-            * ((1 - t_feh) if k == 0 else t_feh if len(feh_vals) > 1 else 1)
-            * ((1 - t_alpha) if l == 0 else t_alpha if len(alpha_vals) > 1 else 1)
+            ((1 - t_teff) if idx_i == 0 else t_teff if len(teff_vals) > 1 else 1)
+            * ((1 - t_logg) if idx_j == 0 else t_logg if len(logg_vals) > 1 else 1)
+            * ((1 - t_feh) if idx_k == 0 else t_feh if len(feh_vals) > 1 else 1)
+            * ((1 - t_alpha) if idx_l == 0 else t_alpha if len(alpha_vals) > 1 else 1)
         )
         weights[idx] = weight
 
@@ -193,7 +191,12 @@ def compute_weights(
         if row["weight"] > 0:
             weighted_datafile.append(
                 WeightedPhoenixDataFile(
-                    teff=row["teff"], logg=row["logg"], feh=row["feh"], alpha=row["alpha"], filename=row["filename"], weight=row["weight"]
+                    teff=row["teff"],
+                    logg=row["logg"],
+                    feh=row["feh"],
+                    alpha=row["alpha"],
+                    filename=row["filename"],
+                    weight=row["weight"],
                 )
             )
     return weighted_datafile
@@ -219,7 +222,9 @@ def find_nearest_datafile(df: pd.DataFrame, teff: int, logg: float, feh: float, 
     )
     min_idx = distances.idxmin()
     row = df.loc[min_idx]
-    return PhoenixDataFile(teff=row["teff"], logg=row["logg"],feh=row["feh"],alpha=row["alpha"], filename=row["filename"])
+    return PhoenixDataFile(
+        teff=row["teff"], logg=row["logg"], feh=row["feh"], alpha=row["alpha"], filename=row["filename"]
+    )
 
 
 @debug_function

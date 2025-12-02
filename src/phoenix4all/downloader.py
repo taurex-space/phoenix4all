@@ -9,10 +9,7 @@ import click
 
 from phoenix4all.log import logger
 
-
 # Creat groups from source registry
-
-
 
 
 @click.group()
@@ -20,9 +17,11 @@ def main():
     """Download Phoenix model files from various sources."""
     pass
 
+
 def initialize_source_commands():
     """Dynamically create download commands for each source."""
     from phoenix4all.sources import find_source, list_sources
+
     sources = list_sources()
     for source_name in sources:
         source_klass = find_source(source_name)
@@ -92,29 +91,22 @@ def initialize_source_commands():
         @click.option("--logg", type=float, default=0.0)
         @click.option("--feh", type=float, default=0.0)
         @click.option("--alpha", type=float, default=0.0)
-        @click.option("--teff-range", type=(float, float), default=None, help="Range of Teff values to download (min max).")
-        @click.option("--logg-range", type=(float, float), default=None, help="Range of logg values to download (min max).")
+        @click.option(
+            "--teff-range", type=(float, float), default=None, help="Range of Teff values to download (min max)."
+        )
+        @click.option(
+            "--logg-range", type=(float, float), default=None, help="Range of logg values to download (min max)."
+        )
         @click.option(
             "--feh-range", type=(float, float), default=None, help="Range of [Fe/H] values to download (min max)."
         )
         @click.option(
             "--alpha-range", type=(float, float), default=None, help="Range of [alpha/Fe] values to download (min max)."
         )
-
-        @click.option(
-            "--all-teff", is_flag=True, default=False, help="Download all available Teff values."
-        )   
-        @click.option(
-            "--all-logg", is_flag=True, default=False, help="Download all available logg values."
-        )
-        @click.option(
-            "--all-feh", is_flag=True, default=False, help="Download all available [Fe/H] values."
-        )
-        @click.option(
-            "--all-alpha", is_flag=True, default=False, help="Download all available [alpha/Fe] values."
-        )
-
-
+        @click.option("--all-teff", is_flag=True, default=False, help="Download all available Teff values.")
+        @click.option("--all-logg", is_flag=True, default=False, help="Download all available logg values.")
+        @click.option("--all-feh", is_flag=True, default=False, help="Download all available [Fe/H] values.")
+        @click.option("--all-alpha", is_flag=True, default=False, help="Download all available [alpha/Fe] values.")
         @click.option(
             "--model",
             type=click.Choice(available_models),
@@ -145,7 +137,6 @@ def initialize_source_commands():
             base_url: str,
             source_klass=source_klass,
         ):
-
             if all_teff:
                 teff = "all"
             if all_logg:
@@ -171,7 +162,6 @@ def initialize_source_commands():
                 base_url,
                 source_klass,
             )
-
 
 
 if __name__ == "__main__":

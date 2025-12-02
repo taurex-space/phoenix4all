@@ -1,6 +1,9 @@
 import logging
+
 import pytest
-from phoenix4all.log import module_logger, create_logger, debug_function
+
+from phoenix4all.log import create_logger, debug_function, module_logger
+
 
 def test_module_logger():
     logger_name = "test.module"
