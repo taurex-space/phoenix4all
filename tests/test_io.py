@@ -1,5 +1,3 @@
-from pathlib import Path
-
 import pytest
 
 from phoenix4all.io import ZIPJSON_KEY, get_package_download_cache_dir, json_unzip, json_zip
