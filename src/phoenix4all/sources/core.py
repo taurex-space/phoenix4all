@@ -170,7 +170,7 @@ def compute_weights(
     t_teff, t_logg, t_feh, t_alpha = t
 
     weights = {}
-    for _, row in nearest_df.iterrows():
+    for idx, row in nearest_df.iterrows():
         idx_i = teff_vals.index(row["teff"])
         idx_j = logg_vals.index(row["logg"])
         idx_k = feh_vals.index(row["feh"])
@@ -187,7 +187,7 @@ def compute_weights(
     nearest_df = nearest_df.copy()
     weighted_datafile = []
     nearest_df["weight"] = pd.Series(weights)
-    for idx, row in nearest_df.iterrows():
+    for _, row in nearest_df.iterrows():
         if row["weight"] > 0:
             weighted_datafile.append(
                 WeightedPhoenixDataFile(

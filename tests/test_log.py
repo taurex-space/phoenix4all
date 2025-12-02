@@ -35,10 +35,10 @@ def test_debug_function_decorator(caplog):
 def test_debug_function_decorator_exception(caplog):
     @debug_function
     def sample_function_with_exception():
-        raise ValueError("Test exception")
+        raise ValueError("Test exception") # noqa: TRY003
 
     with caplog.at_level(logging.DEBUG), pytest.raises(ValueError, match="Test exception"):
-            sample_function_with_exception()
+        sample_function_with_exception()
 
     assert "Entering with args=(), kwargs={}" in caplog.text
     assert "Exception in sample_function_with_exception" in caplog.text
