@@ -1,12 +1,14 @@
-import requests
 import pathlib
-from dataclasses import dataclass
 import urllib.parse as urlparse
+from dataclasses import dataclass
 from typing import Optional
-from ..log import debug_function, module_logger
+
 import bs4
-from .core import FilterType, InterpolationMode, NoAvailableDataError, PhoenixDataFile, PhoenixSource
+import requests
 from astropy import units as u
+
+from ..log import debug_function, module_logger
+from .core import FilterType, InterpolationMode, NoAvailableDataError, PhoenixDataFile, PhoenixSource
 
 _log = module_logger(__name__)
 
@@ -58,8 +60,11 @@ def create_filename(model_id: str, datafile: PhoenixDataFile) -> str:
     Returns:
         The constructed filename as a string.
     """
-    filename = f"svo_{model_id}_T{datafile.teff:05d}_g{datafile.logg:.2f}_m{datafile.feh:+.2f}_a{datafile.alpha:.2f}.txt"
+    filename = (
+        f"svo_{model_id}_T{datafile.teff:05d}_g{datafile.logg:.2f}_m{datafile.feh:+.2f}_a{datafile.alpha:.2f}.txt"
+    )
     return filename
+
 
 def convert_filename_to_datafile(filename: str, model_id: str) -> Optional[PhoenixDataFile]:
     """Convert a Phoenix model filename to a PhoenixDataFile object.
@@ -83,9 +88,8 @@ def convert_filename_to_datafile(filename: str, model_id: str) -> Optional[Phoen
 
     return PhoenixDataFile(teff=teff, logg=logg, feh=feh, alpha=alpha, filename=filename)
 
-def find_datasets_in_path(
-        path: pathlib.Path,
-        model_id: str) -> list[PhoenixDataFile]:
+
+def find_datasets_in_path(path: pathlib.Path, model_id: str) -> list[PhoenixDataFile]:
     """Find Phoenix model files in a given local path."""
     data_files = []
     for file in path.glob("svo_*.txt"):
@@ -94,12 +98,13 @@ def find_datasets_in_path(
             data_files.append(data_file)
     return data_files
 
+
 def load_available_data_from_cache(model_id: str) -> list[PhoenixDataFile]:
     import importlib.resources as ires
     import json
-    from .core import ModelNotFoundError
 
     from ..io import json_unzip
+    from .core import ModelNotFoundError
 
     with ires.open_text("phoenix4all.cache.svo", "svo_dataset.jsonz") as f:
         result = json_unzip(json.load(f))
@@ -110,22 +115,24 @@ def load_available_data_from_cache(model_id: str) -> list[PhoenixDataFile]:
 
     return [PhoenixDataFile(**r) for r in result]
 
-def list_available_models(no_cache: bool=True, base_url: str=BASE_URL) -> list[SVOModel]:
 
+def list_available_models(no_cache: bool = True, base_url: str = BASE_URL) -> list[SVOModel]:
     index_path = urlparse.urljoin(base_url, "index.php")
-    #Add to query models=cond00
-    index_path = index_path +"?"+ urlparse.urlencode({"models": "cond00"})
+    # Add to query models=cond00
+    index_path = index_path + "?" + urlparse.urlencode({"models": "cond00"})
 
-    response = requests.get(index_path)
+    response = requests.get(index_path, timeout=100)
     response.raise_for_status()
-    
+
     from bs4 import BeautifulSoup
+
     soup = BeautifulSoup(response.text, "html.parser")
-    
+
     selector = soup.find("select", {"name": "reqmodels[]"})
     options = selector.find_all("option")
 
     return [SVOModel(option["value"], option.text) for option in options if option["value"] in valid_models]
+
 
 def _determine_property_indicies(soup: bs4.BeautifulSoup) -> dict[str, int]:
     """Determine the indices of the properties in the table header."""
@@ -133,54 +140,56 @@ def _determine_property_indicies(soup: bs4.BeautifulSoup) -> dict[str, int]:
 
     indices = {}
 
-    for idx,tr in enumerate(trs):
+    for idx, tr in enumerate(trs):
         text = tr.text.strip()
         indices[text] = idx
 
     return indices
 
-def _parse_data_row(tr: bs4.BeautifulSoup, indices: dict[str, int], base_url: str = BASE_URL) -> Optional[PhoenixDataFile]:
+
+def _parse_data_row(
+    tr: bs4.BeautifulSoup, indices: dict[str, int], base_url: str = BASE_URL
+) -> Optional[PhoenixDataFile]:
     """Parse a data row from the SVO table."""
 
     tds = tr.find_all("td", class_="tabfld")
     if len(tds) == 0:
         return None
-    model = tds[0].text.strip()
     teff = int(tds[indices["Teff"]].text.strip()) if "Teff" in indices else None
     logg = float(tds[indices["Logg"]].text.strip()) if "Logg" in indices else 0.0
     meta = float(tds[indices["Metallicity"]].text.strip()) if "Metallicity" in indices else 0.0
     alpha = float(tds[indices["Alpha"]].text.strip()) if "Alpha" in indices else 0.0
     link = tds[-3].find("a")["href"]
-    return PhoenixDataFile(teff=teff, logg=logg, feh=meta, alpha=alpha, filename=urlparse.urljoin(base_url,link))
+    return PhoenixDataFile(teff=teff, logg=logg, feh=meta, alpha=alpha, filename=urlparse.urljoin(base_url, link))
 
 
-
-def list_datasets_from_url(
-    model_id: str,
-    base_url: str=BASE_URL) -> list[PhoenixDataFile]:
+def list_datasets_from_url(model_id: str, base_url: str = BASE_URL) -> list[PhoenixDataFile]:
     """List available Phoenix model files from the catalogue.
 
     Args:
         model_id: The SVO model ID to query.
         base_url: Optional base URL to download the catalogue from. Defaults to the standard SVO library.
     """
-    data = requests.post(urlparse.urljoin(base_url, "index.php"), data={
-    "models": model_id,
-    "oby": "",
-    "odesc": "",
-    "sbut": "",
-    "params[bt-settl][teff][min]": "0",
-    "params[bt-settl][teff][max]": "700000",
-    "params[bt-settl][logg][min]": "-90",
-    "params[bt-settl][logg][max]": "90",
-    "params[bt-settl][meta][min]": "-90",
-    "params[bt-settl][meta][max]": "90",
-    "params[bt-settl][alpha][min]": "-90",
-    "params[bt-settl][alpha][max]": "90",
-    "nres": "all",
-    "boton": "Search",
-    "reqmodels[]": model_id
-})
+    data = requests.post(
+        urlparse.urljoin(base_url, "index.php"),
+        data={
+            "models": model_id,
+            "oby": "",
+            "odesc": "",
+            "sbut": "",
+            "params[bt-settl][teff][min]": "0",
+            "params[bt-settl][teff][max]": "700000",
+            "params[bt-settl][logg][min]": "-90",
+            "params[bt-settl][logg][max]": "90",
+            "params[bt-settl][meta][min]": "-90",
+            "params[bt-settl][meta][max]": "90",
+            "params[bt-settl][alpha][min]": "-90",
+            "params[bt-settl][alpha][max]": "90",
+            "nres": "all",
+            "boton": "Search",
+            "reqmodels[]": model_id,
+        },
+    )
     data.raise_for_status()
     soup = bs4.BeautifulSoup(data.text, "html.parser")
     indices = _determine_property_indicies(soup)
@@ -193,12 +202,8 @@ def list_datasets_from_url(
     return datasets
 
 
-
 @debug_function
-def list_available_dataset(
-    model_id: str,
-    path: Optional[pathlib.Path] = None,
-    base_url: Optional[str] = None) -> list:
+def list_available_dataset(model_id: str, path: Optional[pathlib.Path] = None, base_url: Optional[str] = None) -> list:
     """List available Phoenix model files from the catalogue.
 
     Args:
@@ -214,11 +219,11 @@ def list_available_dataset(
     elif base_url == BASE_URL:
         return load_available_data_from_cache(model_id)
 
-
     if path is not None and path.exists() and path.is_dir():
         return find_datasets_in_path(path, model_id)
     else:
         return list_datasets_from_url(model_id, base_url)
+
 
 @debug_function
 def load_file(data_file: PhoenixDataFile) -> str:
@@ -231,8 +236,8 @@ def load_file(data_file: PhoenixDataFile) -> str:
     """
     import pandas as pd
     from astropy.utils.data import download_file
-    filename = data_file.filename
 
+    filename = data_file.filename
 
     if filename.startswith("http"):
         filename = download_file(data_file.filename, cache=True, pkgname="phoenix4all")
@@ -241,12 +246,12 @@ def load_file(data_file: PhoenixDataFile) -> str:
     if not pathlib.Path(filename).exists():
         _log.error("File %s does not exist", data_file.filename)
         raise FileNotFoundError(filename)
-    
+
     df = pd.read_csv(filename, comment="#", names=["wavelength", "flux"], sep=r"\s+")
     spectral = df["wavelength"].values << u.AA
     flux = df["flux"].values << u.erg / (u.s * u.cm**2 * u.AA)
     return spectral, flux
-    
+
 
 def download_model(
     output_dir: pathlib.Path,
@@ -299,23 +304,19 @@ def download_model(
             teff=row.name[0], logg=row.name[1], feh=row.name[2], alpha=row.name[3], filename=row["filename"]
         )
 
-
-
         # Local path to save the file
         # Remove base_url from filename to get relative path
         data_filename = create_filename(model_id, dataset)
         local_path = output_dir / data_filename
         # Now we dont need the filename att the end so just the directory to put it in
         # Remove the filename from the path
-        
 
         files_to_download.append(dataset.filename)
         output_path_for_file.append(local_path)
 
     _log.info("Downloading %s files:", len(files_to_download))
-    
-    return download_to_directory(files_to_download, output_path_for_file, progress=progress, includes_filename=True)
 
+    return download_to_directory(files_to_download, output_path_for_file, progress=progress, includes_filename=True)
 
     # _log.debug("list_available_files called with path=%s, base_url=%s", path, base_url)
     # path = pathlib.Path(path) if path else None
@@ -339,7 +340,6 @@ def download_model(
     # if path:
     #     data_files = [df for df in data_files if pathlib.Path(df.filename).exists()]
     # return data_files
-
 
 
 class SVOSource(PhoenixSource):
@@ -389,7 +389,6 @@ class SVOSource(PhoenixSource):
         """Return a list of available model names for this source."""
         return valid_models
 
-
     def metadata(self) -> dict:
         """Return metadata about the Phoenix source."""
         return {
@@ -407,7 +406,6 @@ class SVOSource(PhoenixSource):
 
     def load_file(self, dataset: PhoenixDataFile) -> tuple[u.Quantity, u.Quantity]:
         return load_file(dataset)
-    
 
     @classmethod
     def list_available_models(
@@ -425,7 +423,6 @@ class SVOSource(PhoenixSource):
         """
         base_url = base_url or BASE_URL
         return list_available_models(no_cache=no_cache, base_url=base_url)
-
 
     @classmethod
     def download_model(
@@ -460,7 +457,12 @@ class SVOSource(PhoenixSource):
             output_dir.mkdir(parents=True, exist_ok=True)
 
         return download_model(
-            output_dir, 
+            output_dir,
             model_id=model_name,
-            teff=teff, logg=logg, feh=feh, alpha=alpha, base_url=base_url, progress=progress
+            teff=teff,
+            logg=logg,
+            feh=feh,
+            alpha=alpha,
+            base_url=base_url,
+            progress=progress,
         )

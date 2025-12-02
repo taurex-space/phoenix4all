@@ -30,7 +30,7 @@ def get_catalogue(*, path: Optional[pathlib.Path] = None, base_url: Optional[str
         path = pathlib.Path(path)
         return path / "catalog.fits"
     url = urllib.parse.urljoin(base_url or BASE_URL, "catalog.fits")
-    local_path = download_file(url,pkgname="phoenix4all", cache=True) if path is None else path
+    local_path = download_file(url, pkgname="phoenix4all", cache=True) if path is None else path
     return pathlib.Path(local_path)
 
 
@@ -102,7 +102,7 @@ def load_file(dataset: PhoenixDataFile) -> tuple[u.Quantity, u.Quantity]:
     # check if this is a local file or a URL
 
     if is_remote_url(dataset.filename):
-        local_path = download_file(dataset.filename,pkgname="phoenix4all", cache=True)
+        local_path = download_file(dataset.filename, pkgname="phoenix4all", cache=True)
 
     local_path = pathlib.Path(local_path)
 
@@ -243,7 +243,6 @@ class SynphotSource(PhoenixSource):
     def available_models(cls) -> list[str]:
         """Return a list of available model names for this source."""
         return ["agss2009"]
-
 
     def metadata(self) -> dict:
         """Return metadata about the Phoenix source."""
