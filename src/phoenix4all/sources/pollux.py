@@ -1,5 +1,3 @@
-from urllib.parse import urljoin
-import requests
 import pathlib
 from typing import Optional
 
@@ -18,16 +16,14 @@ AVAILABLE_MODELS = [
     "RSG",
     "STAGGER",
     "STAGGER-INTENSITY",
-    "STAGGER-RVS"
+    "STAGGER-RVS",
 ]
 
 
-
-
 def load_spectrum(
-        spectrum_pk: str,
-        model_name: str,
-        base_path: Optional[pathlib.Path] = None,
-        base_url: Optional[str] = None,
+    spectrum_pk: str,
+    model_name: str,
+    base_path: Optional[pathlib.Path] = None,
+    base_url: Optional[str] = None,
 ):
     pass
