@@ -240,7 +240,7 @@ def download_model(
         raise NoAvailableDataError
     for _, row in df.iterrows():
         dataset = PhoenixDataFile(
-            teff=row["teff"], logg=row["logg"], feh=row['feh'], alpha=row['alpha'], filename=row["filename"]
+            teff=row["teff"], logg=row["logg"], feh=row["feh"], alpha=row["alpha"], filename=row["filename"]
         )
         # Local path to save the file
         # Remove base_url from filename to get relative path
