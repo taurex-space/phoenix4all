@@ -35,16 +35,8 @@ def test_json_zip_invalid_input():
         json_unzip(invalid_data)  # Should raise KeyError due to missing ZIPJSON_KEY
 
 
-def test_get_package_download_cache_dir(monkeypatch):
+def test_get_package_download_cache_dir():
     # Mock the astropy.config.paths.get_cache_dir_path function
-    mock_cache_dir = Path("/mock/cache/dir")
-
-    def mock_get_cache_dir_path(package_name):
-        assert package_name == "phoenix4all"
-        return mock_cache_dir
-
-    monkeypatch.setattr("astropy.config.paths.get_cache_dir_path", mock_get_cache_dir_path)
-
     # Test get_package_download_cache_dir
     cache_dir = get_package_download_cache_dir()
-    assert cache_dir == mock_cache_dir
+    assert ".phoenix4all" in str(cache_dir)

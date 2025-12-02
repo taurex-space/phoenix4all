@@ -26,4 +26,4 @@ def json_unzip(j: ZIPJSON_TYPE) -> list[dict]:
 def get_package_download_cache_dir() -> pathlib.Path:
     from astropy import config as astropy_config
 
-    return astropy_config.paths.get_cache_dir_path("phoenix4all")
+    return astropy_config.paths.get_cache_dir("phoenix4all")
