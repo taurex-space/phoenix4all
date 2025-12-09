@@ -295,8 +295,6 @@ def download_model(
     files_to_download = []
     output_path_for_file = []
 
-    # Add catalogue file
-    output_path_for_file.append(output_dir)
 
     if df.shape[0] == 0:
         raise NoAvailableDataError
@@ -304,10 +302,10 @@ def download_model(
         dataset = PhoenixDataFile(
             teff=row["teff"], logg=row["logg"], feh=row["feh"], alpha=row["alpha"], filename=row["filename"]
         )
-
+        data_filename = create_filename(model_id, dataset)
         # Local path to save the file
         # Remove base_url from filename to get relative path
-        data_filename = create_filename(model_id, dataset)
+
         local_path = output_dir / data_filename
         # Now we dont need the filename att the end so just the directory to put it in
         # Remove the filename from the path
@@ -315,7 +313,7 @@ def download_model(
         files_to_download.append(dataset.filename)
         output_path_for_file.append(local_path)
 
-    _log.info("Downloading %s files:", len(files_to_download))
+    _log.info("Downloading %s files to %s outputs", len(files_to_download), len(output_path_for_file))
 
     return download_to_directory(files_to_download, output_path_for_file, progress=progress, includes_filename=True)
 
