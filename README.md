@@ -207,6 +207,33 @@ We use the **YOLO** testing regime which is *I wrote this to solve an issue I ha
 - Make an auto guessing function to figure out which source to use based on available files.
 
 
+## TauREx 3 plugin
+
+Phoenix4All comes with a TauREx 3 plugin to use Phoenix4All stars as stellar sources in TauREx 3. Just import the `Phoenix4AllStar` class from `phoenix4all.taurex` and use it like any other TauREx 3 stellar source.
+
+For Input file usage, just set the `star_type` to `phoenix4all` and provide the necessary stellar parameters:
+
+```
+[Star]
+star_type = phoenix4all
+temperature= 5000
+radius= 1.0
+
+# All optional but these are the defaults
+distance= 1
+mass= 1.0
+metallicity= 1.0
+alpha= 0.0
+source="svo"
+interpolation_mode = linear
+use_planck = certainly
+bounds_error = nope
+# path = /path/to/phoenix/models Provide this if you've predownloaded the models
+model_name = bt-settl-cifist
+# logg = 4.5 # Optional, if not provided, will be calculated from mass and radius
+```
+
+
 ## Citation
 
 Please cite both the sources and models as well. We will be working on a proper citation guide soon and a built in citation facility in future releases.

@@ -47,6 +47,7 @@ dev = [
     "matplotlib>=3.9.4",
     "ipympl>=0.9.8",
     "pytest-mock>=3.15.1",
+    "taurex>=3.3.1",
 ]
 
 [build-system]
@@ -126,3 +127,7 @@ skip_empty = true
 [tool.coverage.run]
 branch = true
 source = ["src"]
+
+
+[project.entry-points."taurex.plugins"]
+"phoenix4all" = "phoenix4all.taurex"
