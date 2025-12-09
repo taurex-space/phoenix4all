@@ -295,7 +295,6 @@ def download_model(
     files_to_download = []
     output_path_for_file = []
 
-
     if df.shape[0] == 0:
         raise NoAvailableDataError
     for _, row in df.iterrows():
