@@ -2375,6 +2375,11 @@ dependencies = [
     { name = "tqdm" },
 ]
 
+[package.optional-dependencies]
+taurex = [
+    { name = "taurex" },
+]
+
 [package.dev-dependencies]
 dev = [
     { name = "deptry" },
@@ -2402,8 +2407,10 @@ requires-dist = [
     { name = "numpy", specifier = ">=1.26.4" },
     { name = "pandas", specifier = ">=2.3.3" },
     { name = "requests", specifier = ">=2.32.5" },
+    { name = "taurex", marker = "extra == 'taurex'" },
     { name = "tqdm", specifier = ">=4.67.1" },
 ]
+provides-extras = ["taurex"]
 
 [package.metadata.requires-dev]
 dev = [
