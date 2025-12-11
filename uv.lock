@@ -2361,7 +2361,7 @@ wheels = [
 
 [[package]]
 name = "phoenix4all"
-version = "0.0.2"
+version = "0.0.4"
 source = { editable = "." }
 dependencies = [
     { name = "astropy", version = "6.1.7", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },

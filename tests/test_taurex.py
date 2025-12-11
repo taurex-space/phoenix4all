@@ -19,6 +19,7 @@ def test_keyword():
     pytest.importorskip("taurex")
 
     from taurex.parameter.classfactory import ClassFactory
+
     from phoenix4all.taurex import Phoenix4AllStar
 
     cf = ClassFactory()
