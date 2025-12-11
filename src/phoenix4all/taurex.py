@@ -96,4 +96,4 @@ class Phoenix4AllStar(Star):
 
     @classmethod
     def input_keywords(self) -> tuple[str, ...]:
-        return "phoenix4all"
+        return ("phoenix4all",)
