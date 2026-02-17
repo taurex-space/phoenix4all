@@ -2407,7 +2407,7 @@ requires-dist = [
     { name = "numpy", specifier = ">=1.26.4" },
     { name = "pandas", specifier = ">=2.3.3" },
     { name = "requests", specifier = ">=2.32.5" },
-    { name = "taurex", marker = "extra == 'taurex'" },
+    { name = "taurex", marker = "extra == 'taurex'", specifier = ">=3.3.2" },
     { name = "tqdm", specifier = ">=4.67.1" },
 ]
 provides-extras = ["taurex"]
@@ -3394,7 +3394,7 @@ wheels = [
 
 [[package]]
 name = "taurex"
-version = "3.3.1"
+version = "3.3.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "astropy", version = "6.1.7", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
@@ -3409,9 +3409,9 @@ dependencies = [
     { name = "scipy", version = "1.16.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "tabulate" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/0c/54/9625c0c89e0de85ab007ee8d5b1835ba7c182935a5ed01411a7c006b5bde/taurex-3.3.1.tar.gz", hash = "sha256:87019a5f1e20d9628d7893aa1ec6f106f38502f8c942e1b91efc02cd01eb2c3e", size = 165045 }
+sdist = { url = "https://files.pythonhosted.org/packages/43/43/d55f178d87f095b9c74c7ce8fbc8ce449e4ad192b128e83792e10ffce406/taurex-3.3.2.tar.gz", hash = "sha256:daad26111c37ba61c69014f8316fc21777f257b59a2a80e7c6069550868237ab", size = 165124 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/46/4d/34d5c7fc9e89c1d266856ba5d02b7567e6a42e467b1ea4db6f263204bb49/taurex-3.3.1-py3-none-any.whl", hash = "sha256:e8ad047395a0b788a114dbea2d48e6f9788ad61551ced088419a6314db8b8953", size = 238634 },
+    { url = "https://files.pythonhosted.org/packages/3f/d8/877b5aab03fa13bc82e9daca1ab6273d4a8bca0aae66d763cfa75034905c/taurex-3.3.2-py3-none-any.whl", hash = "sha256:372c3576fd8668d3123d5e6e345f9fec20ba248f933f5031d1cb1773b653457f", size = 238722 },
 ]
 
 [[package]]

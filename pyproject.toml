@@ -33,7 +33,7 @@ Documentation = "https://taurex-space.github.io/phoenix4all/"
 
 [project.optional-dependencies]
 taurex = [
-"taurex",
+"taurex>=3.3.2",
 ]
 
 [dependency-groups]
