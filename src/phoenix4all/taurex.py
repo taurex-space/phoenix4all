@@ -82,7 +82,10 @@ class Phoenix4AllStar(Star):
         wlgrid, sed = get_spectrum(
             teff=self.temperature, logg=self.logg, feh=self.metallicity, alpha=self.alpha, **self.get_spectrum_params
         )
-        current_wngrid = wlgrid.to(u.k, equivalencies=u.spectral()).value
+
+        native_wlgrid = 10000/wngrid[::-1]
+
+        current_wngrid = wlgrid.to(u.um).value
 
         sort_wngrid_indices = np.argsort(current_wngrid)
         current_wngrid = current_wngrid[sort_wngrid_indices]
@@ -90,9 +93,9 @@ class Phoenix4AllStar(Star):
 
         sed_taurex = sed.to(u.W / u.m**2 / u.um)
 
-        sed_interp = np.interp(wngrid, current_wngrid, sed_taurex.value, left=0.0, right=0.0)
+        sed_interp = np.interp(native_wlgrid, current_wngrid, sed_taurex.value, left=0.0, right=0.0)
 
-        self.sed = sed_interp
+        self.sed = sed_interp[::-1]
 
     @classmethod
     def input_keywords(self) -> tuple[str, ...]:
