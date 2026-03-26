@@ -284,6 +284,7 @@ def download_to_directory(  # noqa: C901
     chunk_size: int = 8192,
     progress: bool = False,
     includes_filename: bool = True,
+    max_concurrent: bool = 4,
     **requests_kwargs,
 ) -> list[pathlib.Path]:
     """Download a list of files to a specified directory.
@@ -301,53 +302,62 @@ def download_to_directory(  # noqa: C901
     """
     import requests
     from tqdm.auto import tqdm
+    from pypdl import Pypdl
 
     for output_path in output_paths:
         output_path.mkdir(parents=True, exist_ok=True) if not includes_filename else output_path.parent.mkdir(
             parents=True, exist_ok=True
         )
 
-    files = (
-        tqdm(zip(files, output_paths), desc="Downloading files", total=len(files))
-        if progress
-        else zip(files, output_paths)
-    )
+    # files = (
+    #     tqdm(zip(files, output_paths), desc="Downloading files", total=len(files))
+    #     if progress
+    #     else zip(files, output_paths)
+    # )
     downloaded_files = []
     skipped_files = []
-    for file_url, output_path in files:
-        local_filename = (
-            output_path / os.path.basename(urllib.parse.urlparse(file_url).path)
-            if not includes_filename
-            else output_path
-        )
-        try:
-            with requests.get(file_url, stream=True, timeout=timeout, **requests_kwargs) as r:
-                r.raise_for_status()
-                content_length = r.headers.get("Content-Length", 0)
-                _log.debug("Download %s to %s, bytes: %s", file_url, local_filename, content_length)
-                if check_file_and_length(local_filename, int(content_length)):
-                    skipped_files.append((file_url, "Skipped (already exists)"))
-                    continue
+    tasks = [ {"url": url, "file_path": str(path)}
+        for url, path in zip(files, output_paths)
+    ]
 
-                with open(local_filename, "wb") as f:
-                    if progress:
-                        file_pbar = tqdm(
-                            total=int(r.headers.get("Content-Length", 0)), unit="iB", unit_scale=True, leave=False
-                        )
-                    for chunk in r.iter_content(chunk_size=chunk_size):
-                        if chunk:  # filter out keep-alive new chunks
-                            f.write(chunk)
-                            if progress:
-                                file_pbar.update(len(chunk))
-                    if progress:
-                        file_pbar.close()
-            downloaded_files.append(local_filename)
-        except Exception as e:
-            _log.error("Failed to download %s: %s", file_url, str(e))
-            skipped_files.append((file_url, str(e)))
-    if skipped_files:
-        _log.warning("Some files were skipped or failed to download:")
-        for file_url, reason in skipped_files:
-            _log.warning(f" - {file_url}: {reason}")
+    dl = Pypdl(max_concurrent=max_concurrent, allow_reuse=True)
+    future = dl.start(tasks=tasks, block=True, display=True)
+
+
+    # for file_url, output_path in files:
+    #     local_filename = (
+    #         output_path / os.path.basename(urllib.parse.urlparse(file_url).path)
+    #         if not includes_filename
+    #         else output_path
+    #     )
+    #     try:
+    #         with requests.get(file_url, stream=True, timeout=timeout, **requests_kwargs) as r:
+    #             r.raise_for_status()
+    #             content_length = r.headers.get("Content-Length", 0)
+    #             _log.debug("Download %s to %s, bytes: %s", file_url, local_filename, content_length)
+    #             if check_file_and_length(local_filename, int(content_length)):
+    #                 skipped_files.append((file_url, "Skipped (already exists)"))
+    #                 continue
+
+    #             with open(local_filename, "wb") as f:
+    #                 if progress:
+    #                     file_pbar = tqdm(
+    #                         total=int(r.headers.get("Content-Length", 0)), unit="iB", unit_scale=True, leave=False
+    #                     )
+    #                 for chunk in r.iter_content(chunk_size=chunk_size):
+    #                     if chunk:  # filter out keep-alive new chunks
+    #                         f.write(chunk)
+    #                         if progress:
+    #                             file_pbar.update(len(chunk))
+    #                 if progress:
+    #                     file_pbar.close()
+    #         downloaded_files.append(local_filename)
+    #     except Exception as e:
+    #         _log.error("Failed to download %s: %s", file_url, str(e))
+    #         skipped_files.append((file_url, str(e)))
+    # if skipped_files:
+    #     _log.warning("Some files were skipped or failed to download:")
+    #     for file_url, reason in skipped_files:
+    #         _log.warning(f" - {file_url}: {reason}")
 
     return downloaded_files
