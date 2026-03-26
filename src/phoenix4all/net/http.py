@@ -276,7 +276,7 @@ def check_file_and_length(file_path: pathlib.Path, expected_length: int) -> bool
     return expected_length is not None and file_path.stat().st_size == expected_length
 
 
-def download_to_directory(  # noqa: C901
+def download_to_directory(
     files: list[str],
     output_paths: list[pathlib.Path],
     *,
@@ -300,8 +300,6 @@ def download_to_directory(  # noqa: C901
     Returns:
         A list of pathlib.Path objects representing the downloaded files.
     """
-    import requests
-    from tqdm.auto import tqdm
     from pypdl import Pypdl
 
     for output_path in output_paths:
@@ -314,16 +312,14 @@ def download_to_directory(  # noqa: C901
     #     if progress
     #     else zip(files, output_paths)
     # )
-    downloaded_files = []
-    skipped_files = []
-    tasks = [ {"url": url, "file_path": str(path)}
-        for url, path in zip(files, output_paths)
-    ]
+
+    tasks = [{"url": url, "file_path": str(path)} for url, path in zip(files, output_paths)]
 
     dl = Pypdl(max_concurrent=max_concurrent, allow_reuse=True)
     future = dl.start(tasks=tasks, block=True, display=True)
+    dl.shutdown()
 
-
+    downloaded_files = [pathlib.Path(f[1].path) for f in future]
     # for file_url, output_path in files:
     #     local_filename = (
     #         output_path / os.path.basename(urllib.parse.urlparse(file_url).path)
@@ -359,5 +355,4 @@ def download_to_directory(  # noqa: C901
     #     _log.warning("Some files were skipped or failed to download:")
     #     for file_url, reason in skipped_files:
     #         _log.warning(f" - {file_url}: {reason}")
-
     return downloaded_files

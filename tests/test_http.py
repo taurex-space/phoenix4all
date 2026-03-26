@@ -9,7 +9,6 @@ from phoenix4all.net.http import (
     FetchListingError,
     aherf2filename,
     check_file_and_length,
-    download_to_directory,
     fetch_listing,
     human2bytes,
     parse,

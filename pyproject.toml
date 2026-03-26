@@ -24,7 +24,6 @@ dependencies = [
     "pandas>=2.3.3",
     "pypdl>=1.5.7",
     "requests>=2.32.5",
-    "tqdm>=4.67.1",
 ]
 
 [project.urls]

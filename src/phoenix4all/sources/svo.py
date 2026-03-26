@@ -75,7 +75,8 @@ def convert_filename_to_datafile(filepath: pathlib.Path, model_id: str) -> Optio
         A PhoenixDataFile object or None if parsing fails.
     """
     import re
-    filename=filepath.name
+
+    filename = filepath.name
     pattern = rf"svo_{re.escape(model_id)}_T(?P<teff>\d{{5}})_g(?P<logg>-?\d+\.\d{{2}})_m(?P<feh>[+-]?\d+\.\d{{2}})_a(?P<alpha>[+-]?\d+\.\d{{2}})\.txt"
     match = re.match(pattern, pathlib.Path(filename).name)
     if not match:
