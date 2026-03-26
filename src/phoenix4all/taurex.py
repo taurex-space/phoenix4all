@@ -83,7 +83,7 @@ class Phoenix4AllStar(Star):
             teff=self.temperature, logg=self.logg, feh=self.metallicity, alpha=self.alpha, **self.get_spectrum_params
         )
 
-        native_wlgrid = 10000/wngrid[::-1]
+        native_wlgrid = 10000 / wngrid[::-1]
 
         current_wngrid = wlgrid.to(u.um).value
 
