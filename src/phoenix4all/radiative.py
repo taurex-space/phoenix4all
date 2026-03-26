@@ -22,7 +22,7 @@ def planck(spectrum: u.Quantity, temperature: u.Quantity) -> u.Quantity:
         u.Quantity: The Planck function values at the specified wavelengths and temperatures, in arbitrary units of spectral radiance (e.g., erg / (s cm^2 A sr)).
     """
 
-    wavelength = spectrum.to(u.cm, equivalencies=u.spectral())
+    wavelength = spectrum.to(u.m, equivalencies=u.spectral())
     temperature = temperature.to(u.K)
 
     factor1 = (2 * const.h * const.c**2) / wavelength**5

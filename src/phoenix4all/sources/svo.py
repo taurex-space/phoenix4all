@@ -66,7 +66,7 @@ def create_filename(model_id: str, datafile: PhoenixDataFile) -> str:
     return filename
 
 
-def convert_filename_to_datafile(filename: str, model_id: str) -> Optional[PhoenixDataFile]:
+def convert_filename_to_datafile(filepath: pathlib.Path, model_id: str) -> Optional[PhoenixDataFile]:
     """Convert a Phoenix model filename to a PhoenixDataFile object.
 
     Args:
@@ -75,7 +75,7 @@ def convert_filename_to_datafile(filename: str, model_id: str) -> Optional[Phoen
         A PhoenixDataFile object or None if parsing fails.
     """
     import re
-
+    filename=filepath.name
     pattern = rf"svo_{re.escape(model_id)}_T(?P<teff>\d{{5}})_g(?P<logg>-?\d+\.\d{{2}})_m(?P<feh>[+-]?\d+\.\d{{2}})_a(?P<alpha>[+-]?\d+\.\d{{2}})\.txt"
     match = re.match(pattern, pathlib.Path(filename).name)
     if not match:
@@ -86,14 +86,14 @@ def convert_filename_to_datafile(filename: str, model_id: str) -> Optional[Phoen
     feh = float(match.group("feh"))
     alpha = float(match.group("alpha"))
 
-    return PhoenixDataFile(teff=teff, logg=logg, feh=feh, alpha=alpha, filename=filename)
+    return PhoenixDataFile(teff=teff, logg=logg, feh=feh, alpha=alpha, filename=str(filepath))
 
 
 def find_datasets_in_path(path: pathlib.Path, model_id: str) -> list[PhoenixDataFile]:
     """Find Phoenix model files in a given local path."""
     data_files = []
     for file in path.glob("svo_*.txt"):
-        data_file = convert_filename_to_datafile(file.name, model_id)
+        data_file = convert_filename_to_datafile(file, model_id)
         if data_file:
             data_files.append(data_file)
     return data_files
