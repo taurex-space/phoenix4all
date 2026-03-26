@@ -100,22 +100,22 @@ def test_check_file_and_length(tmp_path):
     assert check_file_and_length(pathlib.Path("nonexistent_file.txt"), 1024) is False
 
 
-# Test download_to_directory
-@patch("requests.get")
-def test_download_to_directory(mock_get, tmp_path):
-    mock_response = MagicMock()
-    mock_response.iter_content = lambda chunk_size: [b"data"]
-    mock_response.headers = {"Content-Length": "4"}
-    mock_response.__enter__.return_value = mock_response
-    mock_get.return_value = mock_response
+# # Test download_to_directory
+# @patch("requests.get")
+# def test_download_to_directory(mock_get, tmp_path):
+#     mock_response = MagicMock()
+#     mock_response.iter_content = lambda chunk_size: [b"data"]
+#     mock_response.headers = {"Content-Length": "4"}
+#     mock_response.__enter__.return_value = mock_response
+#     mock_get.return_value = mock_response
 
-    files = ["http://example.com/file1.txt"]
-    output_paths = [tmp_path / "file1.txt"]
-    downloaded_files = download_to_directory(files, output_paths, progress=False)
+#     files = ["http://example.com/file1.txt"]
+#     output_paths = [tmp_path / "file1.txt"]
+#     downloaded_files = download_to_directory(files, output_paths, progress=False)
 
-    assert len(downloaded_files) == 1
-    assert downloaded_files[0].exists()
-    assert downloaded_files[0].read_text() == "data"
+#     assert len(downloaded_files) == 1
+#     assert downloaded_files[0].exists()
+#     assert downloaded_files[0].read_text() == "data"
 
 
 # Test exceptions

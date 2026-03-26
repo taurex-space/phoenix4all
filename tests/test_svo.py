@@ -26,18 +26,18 @@ def test_create_filename(mock_phoenix_datafile):
 
 
 def test_convert_filename_to_datafile():
-    filename = "svo_bt-settl_T05000_g4.50_m+0.00_a0.00.txt"
+    filename = pathlib.Path("./svo_bt-settl_T05000_g4.50_m+0.00_a0.00.txt")
     model_id = "bt-settl"
     datafile = convert_filename_to_datafile(filename, model_id)
     assert datafile.teff == 5000
     assert datafile.logg == 4.5
     assert datafile.feh == 0.0
     assert datafile.alpha == 0.0
-    assert datafile.filename == filename
+    assert datafile.filename == str(filename)
 
 
 def test_convert_filename_to_datafile_invalid():
-    filename = "invalid_filename.txt"
+    filename = pathlib.Path("./invalid_filename.txt")
     model_id = "bt-settl"
     assert convert_filename_to_datafile(filename, model_id) is None
 
