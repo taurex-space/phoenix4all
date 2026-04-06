@@ -117,7 +117,17 @@ def load_available_data_from_cache(model_id: str) -> list[PhoenixDataFile]:
     return [PhoenixDataFile(**r) for r in result]
 
 
-def list_available_models(no_cache: bool = True, base_url: str = BASE_URL) -> list[SVOModel]:
+def list_available_models(no_cache: bool = True, base_url: str = BASE_URL, path : Optional[pathlib.Path] = None) -> list[SVOModel]:
+
+    if path:
+        path = pathlib.Path(path)
+        files = path.glob("svo_*.txt")
+        svomodels = []
+        for f in files:
+            model = f.name.split("_")[1]
+            svomodels.append(SVOModel(model, model))
+        return svomodels
+
     index_path = urlparse.urljoin(base_url, "index.php")
     # Add to query models=cond00
     index_path = index_path + "?" + urlparse.urlencode({"models": "cond00"})
@@ -370,7 +380,7 @@ class SVOSource(PhoenixSource):
         base_url = base_url or BASE_URL
         super().__init__(path=path, interpolation_mode=interpolation_mode, base_url=base_url, model_name=model_name)
 
-        self.allowed_models = [model.id for model in list_available_models(no_cache=True, base_url=self.base_url)]
+        self.allowed_models = [model.id for model in list_available_models(no_cache=True, base_url=self.base_url, path=path)]
         if model_name is None:
             model_name = self.allowed_models[0]
 
