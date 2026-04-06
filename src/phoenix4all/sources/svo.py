@@ -117,8 +117,9 @@ def load_available_data_from_cache(model_id: str) -> list[PhoenixDataFile]:
     return [PhoenixDataFile(**r) for r in result]
 
 
-def list_available_models(no_cache: bool = True, base_url: str = BASE_URL, path : Optional[pathlib.Path] = None) -> list[SVOModel]:
-
+def list_available_models(
+    no_cache: bool = True, base_url: str = BASE_URL, path: Optional[pathlib.Path] = None
+) -> list[SVOModel]:
     if path:
         path = pathlib.Path(path)
         files = path.glob("svo_*.txt")
@@ -380,7 +381,9 @@ class SVOSource(PhoenixSource):
         base_url = base_url or BASE_URL
         super().__init__(path=path, interpolation_mode=interpolation_mode, base_url=base_url, model_name=model_name)
 
-        self.allowed_models = [model.id for model in list_available_models(no_cache=True, base_url=self.base_url, path=path)]
+        self.allowed_models = [
+            model.id for model in list_available_models(no_cache=True, base_url=self.base_url, path=path)
+        ]
         if model_name is None:
             model_name = self.allowed_models[0]
 
