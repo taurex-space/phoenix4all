@@ -326,7 +326,9 @@ class PhoenixSource(abc.ABC):
 
         """
         self.interpolation_mode = interpolation_mode
-        if interpolation_mode not in InterpolationMode:
+        try:
+            InterpolationMode(interpolation_mode)
+        except (ValueError, TypeError):
             raise UnknownInterpolationModeError(interpolation_mode)
 
         self.base_url = base_url
