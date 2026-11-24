@@ -46,6 +46,11 @@ class Phoenix4AllStar(Star):
             "model_name": model_name,
         }
 
+        # Last computed SED and the inputs that produced it (see initialize).
+        self._cached_key = None
+        self._cached_wngrid = None
+        self._cached_sed = None
+
     @property
     def logg(self):
         if self.logg_value is None:
@@ -78,6 +83,14 @@ class Phoenix4AllStar(Star):
             Wavenumber grid cm-1 to compute black body spectrum
 
         """
+        # A retrieval calls initialize() for every model evaluation, usually with
+        # unchanged stellar parameters and grid: reuse the last SED instead of
+        # reloading the spectrum. Only the small interpolated SED is kept, not the
+        # native spectrum, to avoid holding ~20 MB per MPI rank.
+        key = (self.temperature, self.logg, self.metallicity, self.alpha, dict(self.get_spectrum_params))
+        if key == self._cached_key and np.array_equal(wngrid, self._cached_wngrid):
+            self.sed = self._cached_sed.copy()
+            return
 
         wlgrid, sed = get_spectrum(
             teff=self.temperature, logg=self.logg, feh=self.metallicity, alpha=self.alpha, **self.get_spectrum_params
@@ -96,6 +109,10 @@ class Phoenix4AllStar(Star):
         sed_interp = np.interp(native_wlgrid, current_wngrid, sed_taurex.value, left=0.0, right=0.0)
 
         self.sed = sed_interp[::-1]
+
+        self._cached_key = key
+        self._cached_wngrid = np.array(wngrid, copy=True)
+        self._cached_sed = self.sed.copy()
 
     @classmethod
     def input_keywords(self) -> tuple[str, ...]:
